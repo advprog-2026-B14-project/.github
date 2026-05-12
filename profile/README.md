@@ -2,29 +2,38 @@
 ## Current Architecture of the Application - Deliverable G.1
 ### Context Diagram
 
-Diagram konteks ini menggambarkan sistem **Yomu** secara keseluruhan dan bagaimana ia berinteraksi dengan aktor serta sistem eksternal. Terdapat dua aktor utama yaitu **Pelajar** dan **Admin**, serta beberapa sistem eksternal yang digunakan yaitu **Google SSO** untuk autentikasi, **Vercel** sebagai platform deployment frontend, **AWS** sebagai platform cloud backend, dan **Supabase/PostgreSQL** sebagai layanan database untuk masing-masing service.
+Diagram konteks ini menggambarkan sistem **Yomu** dan interaksinya dengan pengguna serta sistem eksternal pada level tertinggi.
 
 ```mermaid
 flowchart TB
-    Learner["👤 Pelajar\n[Person]\n\nPengguna utama yang membaca teks,\nmengerjakan kuis, bergabung clan,\ndan berdiskusi di forum."]
-    Admin["👤 Admin\n[Person]\n\nMengelola konten bacaan, kuis,\nachievements, moderasi forum,\ndan siklus liga."]
+    Learner["👤 Pelajar
+    [Person]
 
-    subgraph YomuSystem["Yomu System"]
-        Yomu["Yomu\n[Software System]\n\nAplikasi pembelajaran berbasis gamifikasi\nuntuk melatih literasi informasi\nmasyarakat Indonesia."]
-    end
+    Membaca teks, mengerjakan kuis,
+    bergabung clan, dan berdiskusi."]
 
-    GoogleSSO["Google SSO\n[External System]\n\nLayanan autentikasi pihak ketiga\nuntuk login via akun Google."]
-    Vercel["Vercel\n[External System]\n\nPlatform deployment\nuntuk frontend Next.js."]
-    AWS["AWS\n[External System]\n\nPlatform cloud untuk menjalankan\nAPI Gateway dan seluruh\nbackend microservices."]
-    Supabase["Supabase / PostgreSQL\n[External System]\n\nLayanan database cloud yang digunakan\noleh masing-masing backend service\nuntuk menyimpan datanya."]
+    Admin["👤 Admin
+    [Person]
 
-    Learner -->|"Mengakses aplikasi\nmelalui browser [HTTPS]"| Yomu
-    Admin -->|"Mengelola sistem melalui\nadmin dashboard [HTTPS]"| Yomu
+    Mengelola konten, moderasi forum,
+    dan siklus liga."]
 
-    Yomu -->|"Autentikasi pengguna\nvia Google [OAuth 2.0]"| GoogleSSO
-    Yomu -->|"Frontend di-deploy\ndan di-serve [HTTPS]"| Vercel
-    Yomu -->|"Backend services\nberjalan di atas [REST/JSON]"| AWS
-    Yomu -->|"Tiap service menyimpan\ndatanya masing-masing [JDBC/SQL]"| Supabase
+    Yomu["Yomu
+    [Software System]
+
+    Aplikasi pembelajaran berbasis gamifikasi
+    untuk melatih literasi informasi
+    masyarakat Indonesia."]
+
+    GoogleSSO["Google SSO
+    [External System]
+
+    Autentikasi pengguna
+    via akun Google."]
+
+    Learner -->|"Mengakses via browser"| Yomu
+    Admin -->|"Mengelola via admin dashboard"| Yomu
+    Yomu -->|"OAuth 2.0"| GoogleSSO
 
     classDef actor fill:#1f2937,stroke:#94a3b8,color:#ffffff,stroke-width:1px
     classDef system fill:#2563eb,stroke:#93c5fd,color:#ffffff,stroke-width:2px
@@ -32,7 +41,7 @@ flowchart TB
 
     class Learner,Admin actor
     class Yomu system
-    class GoogleSSO,Vercel,AWS,Supabase external
+    class GoogleSSO external
 ```
 
 ### Container Diagram
