@@ -10,46 +10,58 @@ flowchart TB
     Admin[Admin]
 
     subgraph Client["Client Side"]
-        Frontend["Yomu Frontend<br/>Container: Next.js + TailwindCSS<br/>Deployment: Vercel<br/><br/>Menyediakan antarmuka untuk pelajar dan admin"]
+        Frontend["Yomu Frontend<br/>Next.js + TailwindCSS<br/>Deployment: Vercel"]
     end
 
     subgraph Backend["Backend Services - AWS"]
-        Gateway["Yomu Gateway<br/>Container: API Gateway<br/>Technology: Spring Boot<br/><br/>Mengarahkan request frontend ke service backend yang sesuai"]
+        Gateway["Yomu Gateway<br/>API Gateway<br/>Spring Boot"]
 
-        Auth["Yomu Autentikasi<br/>Container: Authentication Service<br/>Technology: Spring Boot<br/><br/>Menangani register, login, JWT, dan identitas pengguna"]
+        Auth["Yomu Autentikasi<br/>Authentication Service<br/>Spring Boot"]
 
-        BacaanKuis["Yomu Bacaan dan Kuis<br/>Container: Reading & Quiz Service<br/>Technology: Spring Boot<br/><br/>Menangani kategori, bacaan, kuis, attempt kuis, dan statistik belajar"]
+        BacaanKuis["Yomu Bacaan dan Kuis<br/>Reading & Quiz Service<br/>Spring Boot"]
 
-        Forum["Yomu Diskusi Forum<br/>Container: Discussion Forum Service<br/>Technology: Spring Boot<br/><br/>Menangani postingan, komentar, balasan, dan interaksi forum"]
+        Forum["Yomu Diskusi Forum<br/>Discussion Forum Service<br/>Spring Boot"]
 
-        Liga["Yomu Interaksi Sosial Liga<br/>Container: Social & League Service<br/>Technology: Spring Boot<br/><br/>Menangani interaksi sosial, leaderboard, dan fitur liga"]
+        Liga["Yomu Interaksi Sosial Liga<br/>Social & League Service<br/>Spring Boot"]
 
-        Achievements["Yomu Achievements<br/>Container: Achievement Service<br/>Technology: Spring Boot<br/><br/>Menangani achievement, progress, badge, dan reward pengguna"]
+        Achievements["Yomu Achievements<br/>Achievement Service<br/>Spring Boot"]
     end
 
     subgraph Data["Data Layer"]
-        Database[("PostgreSQL / Supabase<br/>Container: Database<br/><br/>Menyimpan data pengguna, bacaan, kuis, forum,<br/>liga, achievement, dan progress belajar")]
+        Database[("PostgreSQL / Supabase<br/>Database")]
     end
 
-    Learner -->|"Mengakses platform melalui browser"| Frontend
-    Admin -->|"Mengelola data melalui dashboard"| Frontend
+    Learner -->|"Browser"| Frontend
+    Admin -->|"Admin Dashboard"| Frontend
 
-    Frontend -->|"REST/JSON request"| Gateway
+    Frontend -->|"REST / JSON"| Gateway
 
     Gateway -->|"Auth request"| Auth
-    Gateway -->|"Bacaan & kuis request"| BacaanKuis
-    Gateway -->|"Forum request"| Forum
-    Gateway -->|"Social & league request"| Liga
-    Gateway -->|"Achievement request"| Achievements
+    Gateway -->|"Bacaan & kuis"| BacaanKuis
+    Gateway -->|"Forum"| Forum
+    Gateway -->|"Social & league"| Liga
+    Gateway -->|"Achievements"| Achievements
 
-    Auth -->|"Read/write data pengguna"| Database
-    BacaanKuis -->|"Read/write bacaan, kuis, dan attempt"| Database
-    Forum -->|"Read/write data forum"| Database
-    Liga -->|"Read/write data sosial dan liga"| Database
-    Achievements -->|"Read/write data achievement"| Database
+    Auth -->|"User data"| Database
+    BacaanKuis -->|"Reading, quiz, attempt data"| Database
+    Forum -->|"Forum data"| Database
+    Liga -->|"League/social data"| Database
+    Achievements -->|"Achievement data"| Database
 
-    Liga -->|"Mengambil statistik belajar<br/>REST internal API"| BacaanKuis
-    Achievements -.->|"Menggunakan progress belajar<br/>untuk gamifikasi"| BacaanKuis
+    Liga -->|"Learning statistics"| BacaanKuis
+    Achievements -.->|"Learning progress"| BacaanKuis
+
+    classDef actor fill:#1f2937,stroke:#94a3b8,color:#ffffff,stroke-width:1px;
+    classDef frontend fill:#2563eb,stroke:#93c5fd,color:#ffffff,stroke-width:2px;
+    classDef gateway fill:#7c3aed,stroke:#c4b5fd,color:#ffffff,stroke-width:2px;
+    classDef service fill:#047857,stroke:#6ee7b7,color:#ffffff,stroke-width:2px;
+    classDef database fill:#92400e,stroke:#fbbf24,color:#ffffff,stroke-width:2px;
+
+    class Learner,Admin actor;
+    class Frontend frontend;
+    class Gateway gateway;
+    class Auth,BacaanKuis,Forum,Liga,Achievements service;
+    class Database database;
 ```
 
 ### Risk Mitigation - Deliverables G.3
