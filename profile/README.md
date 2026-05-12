@@ -1,4 +1,39 @@
 # yomu
+## Current Architecture of the Application - Deliverable G.1
+### Context Diagram
+
+Diagram konteks ini menggambarkan sistem **Yomu** secara keseluruhan dan bagaimana ia berinteraksi dengan aktor serta sistem eksternal. Terdapat dua aktor utama yaitu **Pelajar** dan **Admin**, serta beberapa sistem eksternal yang digunakan yaitu **Google SSO** untuk autentikasi, **Vercel** sebagai platform deployment frontend, **AWS** sebagai platform cloud backend, dan **Supabase/PostgreSQL** sebagai layanan database untuk masing-masing service.
+
+```mermaid
+flowchart TB
+    Learner["👤 Pelajar\n[Person]\n\nPengguna utama yang membaca teks,\nmengerjakan kuis, bergabung clan,\ndan berdiskusi di forum."]
+    Admin["👤 Admin\n[Person]\n\nMengelola konten bacaan, kuis,\nachievements, moderasi forum,\ndan siklus liga."]
+
+    subgraph YomuSystem["Yomu System"]
+        Yomu["Yomu\n[Software System]\n\nAplikasi pembelajaran berbasis gamifikasi\nuntuk melatih literasi informasi\nmasyarakat Indonesia."]
+    end
+
+    GoogleSSO["Google SSO\n[External System]\n\nLayanan autentikasi pihak ketiga\nuntuk login via akun Google."]
+    Vercel["Vercel\n[External System]\n\nPlatform deployment\nuntuk frontend Next.js."]
+    AWS["AWS\n[External System]\n\nPlatform cloud untuk menjalankan\nAPI Gateway dan seluruh\nbackend microservices."]
+    Supabase["Supabase / PostgreSQL\n[External System]\n\nLayanan database cloud yang digunakan\noleh masing-masing backend service\nuntuk menyimpan datanya."]
+
+    Learner -->|"Mengakses aplikasi\nmelalui browser [HTTPS]"| Yomu
+    Admin -->|"Mengelola sistem melalui\nadmin dashboard [HTTPS]"| Yomu
+
+    Yomu -->|"Autentikasi pengguna\nvia Google [OAuth 2.0]"| GoogleSSO
+    Yomu -->|"Frontend di-deploy\ndan di-serve [HTTPS]"| Vercel
+    Yomu -->|"Backend services\nberjalan di atas [REST/JSON]"| AWS
+    Yomu -->|"Tiap service menyimpan\ndatanya masing-masing [JDBC/SQL]"| Supabase
+
+    classDef actor fill:#1f2937,stroke:#94a3b8,color:#ffffff,stroke-width:1px
+    classDef system fill:#2563eb,stroke:#93c5fd,color:#ffffff,stroke-width:2px
+    classDef external fill:#6b7280,stroke:#d1d5db,color:#ffffff,stroke-width:2px
+
+    class Learner,Admin actor
+    class Yomu system
+    class GoogleSSO,Vercel,AWS,Supabase external
+```
 
 ### Container Diagram
 
@@ -70,12 +105,12 @@ Diagram deployment ini mengilustrasikan infrastruktur sistem Yomu, di mana aplik
 
 ![Deployment Diagram](https://github.com/user-attachments/assets/56f7fdb7-ca2f-47be-af2b-96057d0faf87)
 
-### Risk Mitigation - Deliverables G.3
+## Risk Mitigation - Deliverables G.3
 
-#### Why the risk storming technique is applied?
+### Why the risk storming technique is applied?
 Kami menerapkan teknik *Risk Storming* untuk mengidentifikasi, memprioritaskan, dan mengurangi risiko teknis dalam sistem **Yomu** yang menggunakan arsitektur *microservices*. Mengingat fungsionalitas aplikasi tersebar ke dalam modul mandiri (Autentikasi, Bacaan & Kuis, Achievements, Interaksi Sosial & Liga, serta Diskusi & Forum), teknik ini membantu kami memetakan potensi kegagalan pada integrasi antar-layanan, konsistensi data *real-time* untuk fitur kompetitif, dan keamanan data pengguna secara kolaboratif.
 
-#### Risk Matrix
+### Risk Matrix
 | Risk ID | Deskripsi Risiko | Probability (1-10) | Impact (1-10) | Score (P x I) |
 | :--- | :--- | :---: | :---: | :---: |
 | **R1** | *Race condition* pada pembaruan skor di Modul Achievements dan Liga setelah kuis selesai. | 8 | 8 | **64** |
@@ -84,7 +119,7 @@ Kami menerapkan teknik *Risk Storming* untuk mengidentifikasi, memprioritaskan, 
 | **R4** | Latensi tinggi saat memuat konten teks besar di Modul Bacaan & Kuis secara bersamaan. | 6 | 5 | **30** |
 | **R5** | Inkoherensi data (data tidak sinkron) antara Modul Interaksi Sosial dan Forum Diskusi. | 5 | 5 | **25** |
 
-#### Current Deployment Risk Diagram
+### Current Deployment Risk Diagram
 
 #### Consensus
 Melalui sesi *Risk Storming*, kelompok kami menyepakati poin-poin krusial berikut:
