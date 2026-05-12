@@ -1,5 +1,57 @@
 # yomu
 
+### Container Diagram
+
+Arsitektur saat ini pada sistem **Yomu** menggunakan pendekatan berbasis layanan, dengan frontend yang terpisah dari beberapa backend service. Frontend dibangun menggunakan **Next.js** dan **TailwindCSS**, sedangkan backend menggunakan **Spring Boot**. Data aplikasi disimpan pada **PostgreSQL/Supabase**. Untuk deployment, frontend berada di **Vercel**, sementara backend service dijalankan di **AWS**.
+
+```mermaid
+flowchart TB
+    Learner[Pelajar]
+    Admin[Admin]
+
+    subgraph Client["Client Side"]
+        Frontend["Yomu Frontend<br/>Container: Next.js + TailwindCSS<br/>Deployment: Vercel<br/><br/>Menyediakan antarmuka untuk pelajar dan admin"]
+    end
+
+    subgraph Backend["Backend Services - AWS"]
+        Gateway["Yomu Gateway<br/>Container: API Gateway<br/>Technology: Spring Boot<br/><br/>Mengarahkan request frontend ke service backend yang sesuai"]
+
+        Auth["Yomu Autentikasi<br/>Container: Authentication Service<br/>Technology: Spring Boot<br/><br/>Menangani register, login, JWT, dan identitas pengguna"]
+
+        BacaanKuis["Yomu Bacaan dan Kuis<br/>Container: Reading & Quiz Service<br/>Technology: Spring Boot<br/><br/>Menangani kategori, bacaan, kuis, attempt kuis, dan statistik belajar"]
+
+        Forum["Yomu Diskusi Forum<br/>Container: Discussion Forum Service<br/>Technology: Spring Boot<br/><br/>Menangani postingan, komentar, balasan, dan interaksi forum"]
+
+        Liga["Yomu Interaksi Sosial Liga<br/>Container: Social & League Service<br/>Technology: Spring Boot<br/><br/>Menangani interaksi sosial, leaderboard, dan fitur liga"]
+
+        Achievements["Yomu Achievements<br/>Container: Achievement Service<br/>Technology: Spring Boot<br/><br/>Menangani achievement, progress, badge, dan reward pengguna"]
+    end
+
+    subgraph Data["Data Layer"]
+        Database[("PostgreSQL / Supabase<br/>Container: Database<br/><br/>Menyimpan data pengguna, bacaan, kuis, forum,<br/>liga, achievement, dan progress belajar")]
+    end
+
+    Learner -->|"Mengakses platform melalui browser"| Frontend
+    Admin -->|"Mengelola data melalui dashboard"| Frontend
+
+    Frontend -->|"REST/JSON request"| Gateway
+
+    Gateway -->|"Auth request"| Auth
+    Gateway -->|"Bacaan & kuis request"| BacaanKuis
+    Gateway -->|"Forum request"| Forum
+    Gateway -->|"Social & league request"| Liga
+    Gateway -->|"Achievement request"| Achievements
+
+    Auth -->|"Read/write data pengguna"| Database
+    BacaanKuis -->|"Read/write bacaan, kuis, dan attempt"| Database
+    Forum -->|"Read/write data forum"| Database
+    Liga -->|"Read/write data sosial dan liga"| Database
+    Achievements -->|"Read/write data achievement"| Database
+
+    Liga -->|"Mengambil statistik belajar<br/>REST internal API"| BacaanKuis
+    Achievements -.->|"Menggunakan progress belajar<br/>untuk gamifikasi"| BacaanKuis
+```
+
 ### Risk Mitigation - Deliverables G.3
 
 #### Why the risk storming technique is applied?
