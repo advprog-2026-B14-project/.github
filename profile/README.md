@@ -64,6 +64,12 @@ flowchart TB
     class Database database;
 ```
 
+### Deployment Diagram
+
+Diagram deployment ini mengilustrasikan infrastruktur sistem Yomu, di mana aplikasi frontend (Next.js) di-deploy melalui Vercel untuk optimalisasi akses pengguna. Pada sisi backend yang menerapkan pola Microservices, proses deployment kelima modul service beserta database-nya bersifat independen dan dibebaskan menyesuaikan preferensi infrastruktur dari Penanggung Jawab (PIC) masing-masing modul. Meskipun memiliki fleksibilitas penyebaran secara mandiri, deployment utama untuk lingkungan API Gateway dan microservices difokuskan pada platform cloud seperti Koyeb atau AWS guna memastikan kelancaran komunikasi internal dan skalabilitas sistem secara keseluruhan.
+
+![Deployment Diagram](https://github.com/user-attachments/assets/56f7fdb7-ca2f-47be-af2b-96057d0faf87)
+
 ### Risk Mitigation - Deliverables G.3
 
 #### Why the risk storming technique is applied?
